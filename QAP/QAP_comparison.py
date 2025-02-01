@@ -4,8 +4,8 @@ import helper
 import time
 
 # Initialize state variables
-N_rooms = 3 #number of rooms (receive supplies)
-N_supply = 2 #number of supply closets (give supplies)
+N_rooms = 30 #number of rooms (receive supplies)
+N_supply = 20 #number of supply closets (give supplies)
 max_flow = 100 #maximum value of flow from a given supply closet to each room
 max_distance = 1 #maximum distance between any two points in the graph
 time_steps = 5 #number of times the flow matrix changes

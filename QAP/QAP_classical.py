@@ -31,6 +31,8 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
     old_room_permutation = np.arange(N_rooms)
     old_supply_permutation = np.arange(N_supply)
 
+    total_cost = 0
+
     # Simulation loop
     for i in range(time_steps):
         # Initial guess for the permutations (flattened array)
@@ -61,6 +63,8 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
             method="SLSQP",  # Sequential Least Squares Programming
         )
 
+        total_cost += result.fun
+
         # Extract the optimized permutations
         optimized_room_permutation = result.x[:N_rooms].astype(int)
         optimized_supply_permutation = result.x[N_rooms:].astype(int)
@@ -69,7 +73,7 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
         old_room_permutation = optimized_room_permutation
         old_supply_permutation = optimized_supply_permutation
 
-    return result
+    return total_cost
 
 
 if __name__ == '__main__':
