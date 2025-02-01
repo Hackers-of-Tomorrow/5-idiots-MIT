@@ -28,8 +28,8 @@ facilities = range(N_rooms + N_supply)
 # Generate the non linear quantum model
 model = Model()
 
-flow = helper.random_matrix(N_rooms, N_supply, max_flow)
-distance = helper.random_matrix(N_rooms + N_supply, N_rooms + N_supply, max_distance)
+flow = helper.random_matrix(N_supply, N_rooms, max_flow)
+distance = helper.random_matrix(N_supply, N_rooms, max_distance)
 
 model_flow = model.constant(flow)
 model_distance = model.constant(distance)
@@ -42,7 +42,7 @@ print(distance)
 
 # Create the objective function
 
-objective_function = (model_flow[permutation_rooms][:, permutation_supply] * model_distance).sum()
+objective_function = (model_flow[permutation_supply][:, permutation_rooms] * model_distance).sum()
 
 # Minimize the model using the objective function
 
