@@ -14,29 +14,13 @@ import numpy as np
 # from dimod.generators import and_gate, combinations
 from dwave.system import LeapHybridNLSampler
 from dwave.optimization import Model
-import helper
+import helper as helper
 
-# Initialize state variables
-N_rooms = 3 #number of rooms (receive supplies)
-N_supply = 2 #number of supply closets (give supplies)
-max_flow = 100 #maximum value of flow from a given supply closet to each room
-max_distance = 1 #maximum distance between any two points in the graph
-time_steps = 10 #number of times the flow matrix changes
+def quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps):
 
-
-
-def quantum_solution(N_rooms, N_supply, max_flow, max_distance, time_steps):
-
-    costs = 0
+    total_cost = 0
     # Generate the non linear quantum model
     model = Model()
-
-    #define flow matrix and distance matrices
-    #we use three small distance matrices instead of one large one since we do not need all the distances
-    flow = helper.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
-    room_supply_distance = helper.random_matrix(N_supply, N_rooms, max_distance)
-    room_room_distance = helper.random_symmetric_matrix(N_rooms, 0, max_distance)
-    supply_supply_distance = helper.random_symmetric_matrix(N_supply, 0, max_distance)
 
     model_flow = model.constant(flow)
     model_rs_distance = model.constant(room_supply_distance)
@@ -68,13 +52,31 @@ def quantum_solution(N_rooms, N_supply, max_flow, max_distance, time_steps):
         #samples the model to determine the permutations of rooms and closets
         sampler.sample(model)
         with model.lock():
-            print(list(sym.state(0) for sym in model.iter_decisions()))
+            # print(list(sym.state(0) for sym in model.iter_decisions()))
             states = list(sym for sym in model.iter_decisions())
             old_supply_permutation = states[3]
             old_room_permutation = states[2]
-            print(model.objective.state(0))
-            cost += model.objective.state(0)
-    return cost
+            # print(model.objective.state(0))
+            total_cost += model.objective.state(0)
+
+    return total_cost
 
 
+if __name__ == '__main__':
+    # Initialize state variables
+    N_rooms = 3 #number of rooms (receive supplies)
+    N_supply = 2 #number of supply closets (give supplies)
+    max_flow = 100 #maximum value of flow from a given supply closet to each room
+    max_distance = 1 #maximum distance between any two points in the graph
+    time_steps = 10 #number of times the flow matrix changes
 
+
+    # define flow matrix and distance matrices
+    # we use three small distance matrices instead of one large one since we do not need all the distances
+    flow = helper.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
+    room_supply_distance = helper.random_matrix(N_supply, N_rooms, max_distance)
+    room_room_distance = helper.random_symmetric_matrix(N_rooms, 0, max_distance)
+    supply_supply_distance = helper.random_symmetric_matrix(N_supply, 0, max_distance)
+
+    # Call the quantum solution
+    print(quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps))

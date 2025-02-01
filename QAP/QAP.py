@@ -16,7 +16,7 @@ import numpy as np
 # from dimod.generators import and_gate, combinations
 from dwave.system import LeapHybridNLSampler
 from dwave.optimization import Model
-import helper
+import QAP.helper as helper
 
 # Initialize state variables
 N = 3
