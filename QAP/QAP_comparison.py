@@ -4,10 +4,10 @@ import helper
 import time
 
 # Initialize state variables
-N_rooms = 30 #number of rooms (receive supplies)
-N_supply = 20 #number of supply closets (give supplies)
+N_rooms = 300 #number of rooms (receive supplies)
+N_supply = 400 #number of supply closets (give supplies)
 max_flow = 100 #maximum value of flow from a given supply closet to each room
-max_distance = 1 #maximum distance between any two points in the graph
+max_distance = 100 #maximum distance between any two points in the graph
 time_steps = 5 #number of times the flow matrix changes
 
 
@@ -22,10 +22,11 @@ supply_supply_distance = helper.random_symmetric_matrix(N_supply, 0, max_distanc
 start_time = time.time()
 quantum_objective = QAP_hospital.quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps)
 quantum_time = time.time()-start_time
+print("quantum has finished")
 start_time = time.time()
 classical_objective = QAP_classical.classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps)
 classical_time = time.time() - start_time
-
+print("classical is done")
 print("Quantum Objective: ", quantum_objective)
 print("Quantum Time: ", quantum_time)
 print("Classical Objective: ", classical_objective)
