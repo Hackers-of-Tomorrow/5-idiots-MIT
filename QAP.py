@@ -24,23 +24,20 @@ max_flow = 100
 min_flow = -100
 max_distance = 1
 
-flow = helper.random_symmetric_matrix(N, min_flow, max_flow)
-distance = helper.random_symmetric_matrix(N, 0, max_distance)
+
 facilities = range(N)
 
 # Generate the binary quantum model
 model = Model()
+
+flow = model.constant(helper.random_symmetric_matrix(N, min_flow, max_flow))
+distance = model.constant(helper.random_symmetric_matrix(N, 0, max_distance))
+
 permutation = model.list(N)
 one = model.constant(1)
-model.add_constraint(permutation.sum() == one)
+print('abc')
+objective_function = (flow[permutation] * distance[:]).sum()
 
+model.minimize(objective_function)
 
-# Add all the variables to the model
-for facility in facilities:
-    bqm.add_variable()
-
-
-bqm = and_gate('x1', 'x2', 'y1')
-sampler = LeapHybridSampler()    
-answer = sampler.sample(bqm)   
-print(answer) 
+print(objective_function)
