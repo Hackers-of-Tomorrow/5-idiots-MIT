@@ -7,7 +7,7 @@ Background for the QAP problem
 2. Create variables for each facility (binary variable)
 3. Create the objective function using the binary variables (facilities)
 4. Use penalties to enforce the constraint that only one facility can be at each location and each facility can be at only one location
-5. Add all the constraints into a BQM (binary quantum model)
+5. Add all the constraints into a non linear (non linear model)
 6. Plot a feasible solution
 """
 
@@ -33,6 +33,7 @@ model = Model()
 flow = helper.random_symmetric_matrix(N, min_flow, max_flow)
 distance = helper.random_symmetric_matrix(N, 0, max_distance)
 
+
 model_flow = model.constant(flow)
 model_distance = model.constant(distance)
 
@@ -44,7 +45,7 @@ print(distance)
 
 # Create the objective function
 
-objective_function = (model_flow[permutation] * model_distance[:]).sum()
+objective_function = (model_flow[permutation][:, permutation] * model_distance).sum()
 
 # Minimize the model using the objective function
 
