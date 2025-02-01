@@ -6,3 +6,6 @@ def random_symmetric_matrix(n, minflow, maxflow):
     P[np.triu_indices(n, 1)] = _R
     P[np.tril_indices(n, -1)] = P.T[np.tril_indices(n, -1)]
     return P
+
+def random_matrix(n, m, max):
+    return np.random.rand(n, m) * max

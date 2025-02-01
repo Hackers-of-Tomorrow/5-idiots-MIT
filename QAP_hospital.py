@@ -17,33 +17,32 @@ from dwave.optimization import Model
 import helper
 
 # Initialize state variables
-N = 3
+N_rooms = 3
+N_supply = 2
 max_flow = 100
-min_flow = -100
 max_distance = 1
 
 
-facilities = range(N)
+facilities = range(N_rooms + N_supply)
 
 # Generate the non linear quantum model
 model = Model()
 
-flow = helper.random_symmetric_matrix(N, min_flow, max_flow)
-distance = helper.random_symmetric_matrix(N, 0, max_distance)
-
+flow = helper.random_matrix(N_rooms, N_supply, max_flow)
+distance = helper.random_matrix(N_rooms + N_supply, N_rooms + N_supply, max_distance)
 
 model_flow = model.constant(flow)
 model_distance = model.constant(distance)
 
-permutation = model.list(N)
-one = model.constant(1)
+permutation_rooms = model.list(N_rooms)
+permutation_supply = model.list(N_supply)
 
 print(flow)
 print(distance)
 
 # Create the objective function
 
-objective_function = (model_flow[permutation][:, permutation] * model_distance).sum()
+objective_function = (model_flow[permutation_rooms][:, permutation_supply] * model_distance).sum()
 
 # Minimize the model using the objective function
 
