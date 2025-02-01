@@ -20,3 +20,10 @@ Things to do:
  - Add a smoke test (i.e. does the demo actually run?)
  - Format code so that it conforms with PEP 8
 """
+
+from dimod.generators import and_gate
+from dwave.system import LeapHybridSampler
+bqm = and_gate('x1', 'x2', 'y1')
+sampler = LeapHybridSampler()    
+answer = sampler.sample(bqm)   
+print(answer) 
