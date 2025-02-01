@@ -7,7 +7,7 @@ getting started. Thanks!
 instructions and this comment as they will not be relevant in your code 
 example README.md.-->
 
-# <demo_name>
+# Quantum-Assisted Quadratic Assignment Problem (QAP)
 
 Describe your example and specify what it is demonstrating. Consider the
 following questions:
