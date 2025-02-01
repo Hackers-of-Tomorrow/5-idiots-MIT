@@ -13,20 +13,27 @@ Background for the QAP problem
 
 # Create necessary imports
 import numpy as np
-from dimod import BinaryQuadraticModel
-from dimod.generators import and_gate, combinations
+# from dimod.generators import and_gate, combinations
 from dwave.system import LeapHybridSampler
+from dwave.optimization import Model
+import helper
 
 # Initialize state variables
 N = 3
 max_flow = 100
 min_flow = -100
-flow = np.random.uniform(min_flow, max_flow, size=(N, N))
-distance = np.random.rand(N,N)
+max_distance = 1
+
+flow = helper.random_symmetric_matrix(N, min_flow, max_flow)
+distance = helper.random_symmetric_matrix(N, 0, max_distance)
 facilities = range(N)
 
 # Generate the binary quantum model
-bqm = BinaryQuadraticModel()
+model = Model()
+permutation = model.list(N)
+one = model.constant(1)
+model.add_constraint(permutation.sum() == one)
+
 
 # Add all the variables to the model
 for facility in facilities:
