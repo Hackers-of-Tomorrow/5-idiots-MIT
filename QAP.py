@@ -3,7 +3,7 @@ Background for the QAP problem
 
 **WORKFLOW**
 
-1. Formulate the problem with flow and distance symmetric matrices
+1. Formulate the non linear problem with flow and distance symmetric matrices
 2. Create variables for each facility (binary variable)
 3. Create the objective function using the binary variables (facilities)
 4. Use penalties to enforce the constraint that only one facility can be at each location and each facility can be at only one location
@@ -11,17 +11,26 @@ Background for the QAP problem
 6. Plot a feasible solution
 """
 
+# Create necessary imports
 import numpy as np
-from dimod.generators import and_gate
+from dimod import BinaryQuadraticModel
+from dimod.generators import and_gate, combinations
 from dwave.system import LeapHybridSampler
 
+# Initialize state variables
 N = 3
 max_flow = 100
 min_flow = -100
+flow = np.random.uniform(min_flow, max_flow, size=(N, N))
+distance = np.random.rand(N,N)
+facilities = range(N)
 
-f = np.random.uniform(min_flow, max_flow, size=(N, N))
-d = np.random.rand(N,N)
+# Generate the binary quantum model
+bqm = BinaryQuadraticModel()
 
+# Add all the variables to the model
+for facility in facilities:
+    bqm.add_variable()
 
 
 bqm = and_gate('x1', 'x2', 'y1')
