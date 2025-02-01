@@ -9,3 +9,7 @@ def random_symmetric_matrix(n, minflow, maxflow):
 
 def random_matrix(n, m, max):
     return np.random.rand(n, m) * max
+
+def random_time_matrix(number, n, m, max):
+    return np.random.rand(number, n, m) * max
+
