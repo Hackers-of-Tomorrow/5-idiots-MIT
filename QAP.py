@@ -14,7 +14,7 @@ Background for the QAP problem
 # Create necessary imports
 import numpy as np
 # from dimod.generators import and_gate, combinations
-from dwave.system import LeapHybridSampler
+from dwave.system import LeapHybridNLSampler
 from dwave.optimization import Model
 import helper
 
@@ -27,17 +27,35 @@ max_distance = 1
 
 facilities = range(N)
 
-# Generate the binary quantum model
+# Generate the non linear quantum model
 model = Model()
 
-flow = model.constant(helper.random_symmetric_matrix(N, min_flow, max_flow))
-distance = model.constant(helper.random_symmetric_matrix(N, 0, max_distance))
+flow = helper.random_symmetric_matrix(N, min_flow, max_flow)
+distance = helper.random_symmetric_matrix(N, 0, max_distance)
+
+model_flow = model.constant(flow)
+model_distance = model.constant(distance)
 
 permutation = model.list(N)
 one = model.constant(1)
-print('abc')
-objective_function = (flow[permutation] * distance[:]).sum()
+
+print(flow)
+print(distance)
+
+# Create the objective function
+
+objective_function = (model_flow[permutation] * model_distance[:]).sum()
+
+# Minimize the model using the objective function
 
 model.minimize(objective_function)
 
-print(objective_function)
+# Sample the model to see the output
+
+sampler = LeapHybridNLSampler()
+sampler.sample(model)
+
+# Output the results
+with model.lock():
+    print(list(sym.state(0) for sym in model.iter_decisions()))
+    print(model.objective.state(0))
