@@ -3,9 +3,6 @@ import dimod
 from dimod import ConstrainedQuadraticModel, Binary
 from dwave.system import LeapHybridCQMSampler
 
-# Import your helper.py module
-import helper  # Make sure helper.py is in the same directory or PYTHONPATH
-
 def quantum_solution(
     N_rooms,
     N_supply,
@@ -164,6 +161,7 @@ def quantum_solution(
 
 if __name__ == "__main__":
     import time
+    import matrix_gen as matrix_gen
 
     # Example usage
     N_rooms = 5
@@ -182,17 +180,17 @@ if __name__ == "__main__":
 
     # Flow: shape (time_steps, N_supply, N_rooms)
     max_flow = 10
-    flow = helper.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
+    flow = matrix_gen.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
 
     # room_supply_distance: shape (N_supply, N_rooms)
     max_dist = 5
-    room_supply_distance = helper.random_matrix(N_supply, N_rooms, max_dist)
+    room_supply_distance = matrix_gen.random_matrix(N_supply, N_rooms, max_dist)
 
     # room_room_distance: shape (N_rooms, N_rooms), symmetrical
-    room_room_distance = helper.random_symmetric_matrix(N_rooms, 0, max_dist)
+    room_room_distance = matrix_gen.random_symmetric_matrix(N_rooms, 0, max_dist)
 
     # supply_supply_distance: shape (N_supply, N_supply), symmetrical
-    supply_supply_distance = helper.random_symmetric_matrix(N_supply, 0, max_dist)
+    supply_supply_distance = matrix_gen.random_symmetric_matrix(N_supply, 0, max_dist)
 
     # ----------------------------------------------------
     # Solve
