@@ -164,10 +164,10 @@ if __name__ == "__main__":
     import matrix_gen as matrix_gen
 
     # Example usage
-    N_rooms = 5
-    N_supply = 4
-    time_steps = 3
-    penalty = 10
+    N_rooms = 16
+    N_supply = 12
+    time_steps = 12
+    penalty = 40
 
     # ----------------------------------------------------
     # Use helper.py to generate random matrices
