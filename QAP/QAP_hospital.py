@@ -10,7 +10,7 @@ Background for the QAP problem
     - Two permutations, one that needs supplies and another that gets supplies, but they can't overlap locations
 """
 import time
-
+import test_permutation
 # Create necessary imports
 import numpy as np
 # from dimod.generators import and_gate, combinations
@@ -98,6 +98,7 @@ def quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_d
 
     sampler.sample(model)
     model.lock()
+
     # print(list(sym.state(0) for sym in model.iter_decisions()))
     # states = list(sym for sym in model.iter_decisions())
     # old_supply_permutation = permutation_supply#states[3]
@@ -105,12 +106,12 @@ def quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_d
     # print(model.objective.state(0))
     # total_cost += model.objective.state(0)
 
-    return model.objective.state(0)
+    return model.objective.state(0), list(sym.state(0) for sym in model.iter_decisions())
 
 if __name__ == '__main__':
     # Initialize state variables
-    N_rooms = 30 #number of rooms (receive supplies)
-    N_supply = 23 #number of supply closets (give supplies)
+    N_rooms = 4 #number of rooms (receive supplies)
+    N_supply = 3 #number of supply closets (give supplies)
     max_flow = 100 #maximum value of flow from a given supply closet to each room
     max_distance = 1 #maximum distance between any two points in the graph
     time_steps = 10 #number of times the flow matrix changes
@@ -125,8 +126,13 @@ if __name__ == '__main__':
 
     # Call the quantum solution
     t = time.time()
-    print(quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10))
-    print('1 finished in ', time.time() - t)
-    t = time.time()
-    print(quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10))
-    print('2 finished in ', time.time() - t)
+    # print(quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10))
+    # print('1 finished in ', time.time() - t)
+    # t = time.time()
+    cost, permutations = quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10)
+    print('nl finished in ', time.time() - t)
+    calculated_cost = test_permutation.test_permutation(flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10, permutations)
+
+    cost, permutations = cq (N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10)
+
+

@@ -133,9 +133,6 @@ def quantum_solution(
                     dist_rooms = room_room_distance[i, i_prev]
                     if dist_rooms != 0:
                         objective_expr += penalty * dist_rooms * X[(t, i, r)] * X[(t-1, i_prev, r)]
-
-    # Movement penalty: Supplies
-    for t in range(1, time_steps):
         for i in range(N_supply):
             for s in range(N_supply):
                 for i_prev in range(N_supply):
@@ -159,7 +156,26 @@ def quantum_solution(
         return None, None
 
     best = feasible.first
-    return best.sample, best.energy
+
+    X_res = np.zeros(shape=(time_steps, N_rooms, N_rooms))
+    Y_res = np.zeros(shape=(time_steps, N_supply, N_supply))
+    res_list = []
+    for key in best.sample.keys():
+        if best.sample[key] == 1:
+            res_list.append(key.split('_'))
+    # res_list = [key.split('_') for key in best.sample.keys()]
+    for element in res_list:
+        print(element)
+        if element[0] == 'X':
+            X_res[int(element[1])][int(element[2])][int(element[3])] = 1
+        elif element[0] == 'Y':
+            Y_res[int(element[1])][int(element[2])][int(element[3])] = 1
+        else:
+            print(element, "ERROR")
+    print(X_res)
+    print(Y_res)
+    print("RESULTS")
+    return best.energy, (X_res, Y_res)
 
 
 if __name__ == "__main__":
@@ -199,7 +215,7 @@ if __name__ == "__main__":
     # ----------------------------------------------------
     start_time = time.time()
 
-    best_sample, best_energy = quantum_solution(
+    best_energy, best_sample = quantum_solution(
         N_rooms,
         N_supply,
         flow,
