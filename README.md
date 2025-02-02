@@ -7,8 +7,6 @@ Assignment issues are a massive problem when it comes to distributing resources 
 
 These additions ensure that our QAP solution is adapted to the unpredictability of real world situations.
 
-![D-Wave Logo](dwave_logo.png)
-
 ## Usage
 
 To use the constrained quantum model, run the following code,
@@ -73,6 +71,11 @@ The second constraint is that each room is only chosen once over all the positio
 * Each of the models is encoded in a function that can be called so long as you import the class in your code.
 * matrix_gen.py contains all of the generation code for the random matrices.
 * QAP_comparison.py in the QAP folder is a comparison platform to visualize the differences between the models.
+
+## Results
+Quantum Algorithms overall seemed to detect more optimal solutions but took longer to do so compared to a scipy algorithm. However, with a large enough sample size, we hope that, if we have enough qubits, the quantum algorithm will be more efficient.
+![quantumvclassical](photos/quantumvclassical.png)
+![effectiveness_rooms](photos/effectiveness_rooms.png)
 
 ## References
 
