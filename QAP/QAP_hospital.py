@@ -1,3 +1,4 @@
+
 """
 Background for the QAP problem
 
@@ -124,8 +125,8 @@ if __name__ == '__main__':
 
     # Call the quantum solution
     t = time.time()
-    print(quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 40))
+    print(quantum_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10))
     print('1 finished in ', time.time() - t)
     t = time.time()
-    print(quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 40))
+    print(quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, 10))
     print('2 finished in ', time.time() - t)
