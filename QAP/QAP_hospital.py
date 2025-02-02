@@ -102,7 +102,7 @@ def quantum_solution2(N_rooms, N_supply, flow, room_supply_distance, room_room_d
     # states = list(sym for sym in model.iter_decisions())
     # old_supply_permutation = permutation_supply#states[3]
     # old_room_permutation = permutation_rooms #states[2]
-    print(model.objective.state(0))
+    # print(model.objective.state(0))
     # total_cost += model.objective.state(0)
 
     return model.objective.state(0)

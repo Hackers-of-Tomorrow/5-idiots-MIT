@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 import helper
 
-def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps):
+def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, penalty):
 
     # Define the objective function
     def objective_function(x, time_step):
@@ -18,10 +18,10 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
         flow_cost = np.sum(flow[time_step][supply_permutation][:, room_permutation] * room_supply_distance)
 
         # Calculate the penalty for moving rooms
-        room_penalty = np.sum(room_room_distance[room_permutation][:, old_room_permutation])
+        room_penalty = np.sum(room_room_distance[room_permutation][:, old_room_permutation])*penalty
 
         # Calculate the penalty for moving supply facilities
-        supply_penalty = np.sum(supply_supply_distance[supply_permutation][:, old_supply_permutation])
+        supply_penalty = np.sum(supply_supply_distance[supply_permutation][:, old_supply_permutation])*penalty
 
         # Total cost
         total_cost = flow_cost + room_penalty + supply_penalty

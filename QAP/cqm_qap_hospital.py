@@ -6,7 +6,7 @@ from dwave.system import LeapHybridCQMSampler
 # Import your helper.py module
 import helper  # Make sure helper.py is in the same directory or PYTHONPATH
 
-def solve_room_supply_cqm(
+def quantum_solution(
     N_rooms,
     N_supply,
     flow,
@@ -46,7 +46,7 @@ def solve_room_supply_cqm(
     # 2) Define binary variables for permutations
     # --------------------------------------------------
     # X[t, i, r] = 1 if at time t, "room r" occupies "position i"
-    # Y[t, i, s] = 1 if at time t, "supply s" occupies "position i"
+    # Y[t, j, s] = 1 if at time t, "supply s" occupies "position j"
     #
     # "position" is just an index from 0..(N_rooms-1) or 0..(N_supply-1).
     # This way, we ensure each occupant is used exactly once.
@@ -117,30 +117,31 @@ def solve_room_supply_cqm(
 
     # (A) Flow cost
     for t in range(time_steps):
-        for i in range(min(N_rooms, N_supply)):
-            for r in range(N_rooms):
-                for s in range(N_supply):
-                    cost_flow = flow[t, s, r] * room_supply_distance[s, r]
-                    if cost_flow != 0:
-                        objective_expr += cost_flow * X[(t, i, r)] * Y[(t, i, s)]
+        for i in range(N_rooms):
+            for j in range(N_supply):
+                for r in range(N_rooms):
+                    for s in range(N_supply):
+                        cost_flow = flow[t, s, r] * room_supply_distance[j, i]
+                        if cost_flow != 0:
+                            objective_expr += cost_flow * X[(t, i, r)] * Y[(t, j, s)]
 
     # (B) Movement penalty: Rooms
     for t in range(1, time_steps):
         for i in range(N_rooms):
             for r in range(N_rooms):
-                for r_prev in range(N_rooms):
-                    dist_rooms = room_room_distance[r, r_prev]
+                for i_prev in range(N_rooms):
+                    dist_rooms = room_room_distance[i, i_prev]
                     if dist_rooms != 0:
-                        objective_expr += penalty * dist_rooms * X[(t, i, r)] * X[(t-1, i, r_prev)]
+                        objective_expr += penalty * dist_rooms * X[(t, i, r)] * X[(t-1, i_prev, r)]
 
     # Movement penalty: Supplies
     for t in range(1, time_steps):
         for i in range(N_supply):
             for s in range(N_supply):
-                for s_prev in range(N_supply):
-                    dist_supp = supply_supply_distance[s, s_prev]
+                for i_prev in range(N_supply):
+                    dist_supp = supply_supply_distance[i, i_prev]
                     if dist_supp != 0:
-                        objective_expr += penalty * dist_supp * Y[(t, i, s)] * Y[(t-1, i, s_prev)]
+                        objective_expr += penalty * dist_supp * Y[(t, i, s)] * Y[(t-1, i_prev, s)]
 
     # Set the CQM objective
     cqm.set_objective(objective_expr)
@@ -198,7 +199,7 @@ if __name__ == "__main__":
     # ----------------------------------------------------
     start_time = time.time()
 
-    best_sample, best_energy = solve_room_supply_cqm(
+    best_sample, best_energy = quantum_solution(
         N_rooms,
         N_supply,
         flow,
