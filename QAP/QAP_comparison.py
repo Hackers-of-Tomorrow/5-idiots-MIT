@@ -7,10 +7,11 @@ import time
 import matplotlib.pyplot as plt
 
 # Initialize state variables
-N_rooms = 3 #number of rooms (receive supplies)
-N_supply = 3 #number of supply closets (give supplies)
+N_rooms = 300 #number of rooms (receive supplies)
+N_supply = 400 #number of supply closets (give supplies)
+
 max_flow = 100 #maximum value of flow from a given supply closet to each room
-max_distance = 1 #maximum distance between any two points in the graph
+max_distance = 100 #maximum distance between any two points in the graph
 time_steps = 5 #number of times the flow matrix changes
 penalty = 10 # penalty for moving
 iterations = 4
