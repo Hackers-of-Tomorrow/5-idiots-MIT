@@ -1,8 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
-import helper
 
-def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps):
+def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps, penalty):
 
     # Define the objective function
     def objective_function(x, time_step):
@@ -18,10 +17,10 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
         flow_cost = np.sum(flow[time_step][supply_permutation][:, room_permutation] * room_supply_distance)
 
         # Calculate the penalty for moving rooms
-        room_penalty = np.sum(room_room_distance[room_permutation][:, old_room_permutation])
+        room_penalty = np.sum(room_room_distance[room_permutation][:, old_room_permutation])*penalty
 
         # Calculate the penalty for moving supply facilities
-        supply_penalty = np.sum(supply_supply_distance[supply_permutation][:, old_supply_permutation])
+        supply_penalty = np.sum(supply_supply_distance[supply_permutation][:, old_supply_permutation])*penalty
 
         # Total cost
         total_cost = flow_cost + room_penalty + supply_penalty
@@ -77,6 +76,8 @@ def classical_solution(N_rooms, N_supply, flow, room_supply_distance, room_room_
 
 
 if __name__ == '__main__':
+    import matrix_gen as matrix_gen
+
     # Initialize state variables
     N_rooms = 3
     N_supply = 2
@@ -85,9 +86,9 @@ if __name__ == '__main__':
     time_steps = 10
 
     # Generate matrices
-    flow = helper.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
-    room_supply_distance = helper.random_matrix(N_supply, N_rooms, max_distance)
-    room_room_distance = helper.random_symmetric_matrix(N_rooms, 0, max_distance)
-    supply_supply_distance = helper.random_symmetric_matrix(N_supply, 0, max_distance)
+    flow = matrix_gen.random_time_matrix(time_steps, N_supply, N_rooms, max_flow)
+    room_supply_distance = matrix_gen.random_matrix(N_supply, N_rooms, max_distance)
+    room_room_distance = matrix_gen.random_symmetric_matrix(N_rooms, 0, max_distance)
+    supply_supply_distance = matrix_gen.random_symmetric_matrix(N_supply, 0, max_distance)
 
     classical_solution(flow, room_supply_distance, room_room_distance, supply_supply_distance, time_steps)
